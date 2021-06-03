@@ -1,23 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from "react";
+
+import MainContent from "./components/MainContent";
+import Navbar from "./components/Navbar";
+
+import { robots } from "./robots";
+
+import "./App.css";
 
 function App() {
+  const [filteredRobots, setFilteredRobots] = useState(robots);
+  const [searchField, setSearchField] = useState("");
+
+  let onSearchChange = (event) => {
+    setSearchField(event.target.value);
+  };
+
+  let filtereRobots = () => {
+    setFilteredRobots(
+      robots.filter((robot) =>
+        robot.name.toLowerCase().includes(searchField.toLowerCase())
+      )
+    );
+  };
+
+  useEffect(() => {
+    filtereRobots();
+  }, [searchField]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar searchField={searchField} handleChange={onSearchChange} />
+      <MainContent robots={filteredRobots} />
     </div>
   );
 }
